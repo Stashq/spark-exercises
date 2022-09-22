@@ -3,10 +3,10 @@
 ## Launching
 
 [Launching Applications with spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html)
-./bin/spark-submit --class \<main-class> --master \<master-url>  --deploy-mode \<deploy-mode> --conf \<key>=\<value> ... # other options \<application-jar> \[application-arguments]
+*./bin/spark-submit --class \<main-class> --master \<master-url>  --deploy-mode \<deploy-mode> --conf \<key>=\<value> ... # other options \<application-jar> \[application-arguments]*
 
-./bin/pyspark --master local[x] - Run pyspark on local machine with x processes ("*" means as many worker threads as logical cores on your machine).  
-./bin/pyspark --master yarn - Connect to a YARN cluster in client or cluster mode depending on the value of --deploy-mode. The cluster location will be found based on the HADOOP_CONF_DIR or YARN_CONF_DIR variable.  
+*./bin/pyspark --master local[x]* - Run pyspark on local machine with x processes ("*" means as many worker threads as logical cores on your machine).  
+*./bin/pyspark --master yarn* - Connect to a YARN cluster in client or cluster mode depending on the value of --deploy-mode. The cluster location will be found based on the HADOOP_CONF_DIR or YARN_CONF_DIR variable.  
 
 ## Practices
 
@@ -44,10 +44,15 @@ Using partitions we give up the order of events.
 
 ### Pyspark and Kafka
 
-df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)") \ - always use this line first
-    .select(from_json(col("value"), schema).alias('json')) \ - loading schema
-    .select('json.*') \ - exctracting columns which are part of 'json' column
-    .withColumn('timestamp', to_timestamp(col('timestamp'), 'yyyy-MM-dd HH:mm:ss')) - if you have datetime you can convert it
+```python
+df.selectExpr(
+    "CAST(key AS STRING)", "CAST(value AS STRING)") \ # always use this line first  
+    .select(from_json(col("value"), schema).alias('json')) \ # loading schema  
+    .select('json.*') \ # exctracting columns which are part of 'json' column  
+    .withColumn(
+        'timestamp', to_timestamp(col('timestamp'),
+        'yyyy-MM-dd HH:mm:ss')) # if you have datetime you can convert it  
+```
 
-[windowing](https://www.databricks.com/blog/2017/05/08/event-time-aggregation-watermarking-apache-sparks-structured-streaming.html)
-window(20) - windowing over 20 seconds
+[Windowing explained](https://www.databricks.com/blog/2017/05/08/event-time-aggregation-watermarking-apache-sparks-structured-streaming.html)
+window(20, 10) - windowing over 20 seconds with step of 10 seconds.
