@@ -54,5 +54,5 @@ df.selectExpr(
         'yyyy-MM-dd HH:mm:ss')) # if you have datetime you can convert it  
 ```
 
-[Windowing explained](https://www.databricks.com/blog/2017/05/08/event-time-aggregation-watermarking-apache-sparks-structured-streaming.html)
+[Windowing explained](https://www.databricks.com/blog/2017/05/08/event-time-aggregation-watermarking-apache-sparks-structured-streaming.html)  
 window(20, 10) - windowing over 20 seconds with step of 10 seconds.
